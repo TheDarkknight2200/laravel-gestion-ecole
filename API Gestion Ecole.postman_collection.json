@@ -1,0 +1,1164 @@
+{
+  "info": {
+    "_postman_id": "a15385ae-b544-4a65-9825-a4549e28034a",
+    "name": "API Gestion Ecole",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51972826",
+    "_collection_link": "https://go.postman.co/collection/51972826-a15385ae-b544-4a65-9825-a4549e28034a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201 Created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Réponse contient un token\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"token\");\r",
+                  "    pm.expect(json.token).to.be.a(\"string\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"token_type est Bearer\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.token_type).to.eql(\"Bearer\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Admin Ecole\",\r\n    \"email\": \"admin@ecole.sn\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Réponse contient un token\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"token\");\r",
+                  "    pm.expect(json.token).to.be.a(\"string\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"token_type est Bearer\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.token_type).to.eql(\"Bearer\");\r",
+                  "});\r",
+                  "\r",
+                  "// Sauvegarde automatique du token dans l'environnement\r",
+                  "const json = pm.response.json();\r",
+                  "pm.environment.set(\"token\", json.token);\r",
+                  "console.log(\"Token sauvegardé :\", json.token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@ecole.sn\",\r\n    \"password\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Me",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Réponse contient les données utilisateur\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.have.property(\"id\");\r",
+                  "    pm.expect(json.data).to.have.property(\"email\");\r",
+                  "    pm.expect(json.data).to.have.property(\"name\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@ecole.sn\",\r\n    \"password\": \"password123\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Me sans token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 401 Unauthorized\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Message d'erreur présent\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"message\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@ecole.sn\",\r\n    \"password\": \"password123\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Message de déconnexion présent\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"message\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.environment.unset(\"token\");\r",
+                  "console.log(\"Token supprimé de l'environnement\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@ecole.sn\",\r\n    \"password\": \"password123\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cours",
+      "item": [
+        {
+          "name": "Créer un cours",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201 Created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Cours créé avec les bonnes données\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.have.property(\"id\");\r",
+                  "    pm.expect(json.data.libelle).to.eql(\"Algorithmique\");\r",
+                  "});\r",
+                  "\r",
+                  "// Sauvegarde automatique de l'id du cours\r",
+                  "const json = pm.response.json();\r",
+                  "pm.environment.set(\"cours_id\", json.data.id);\r",
+                  "console.log(\"cours_id sauvegardé :\", json.data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"libelle\": \"Algorithmique\",\r\n    \"professeur\": \"M. Sène\",\r\n    \"volume_horaire\": 40\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cours",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cours"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lister les cours",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Réponse paginée avec data, links et meta\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"data\");\r",
+                  "    pm.expect(json).to.have.property(\"links\");\r",
+                  "    pm.expect(json).to.have.property(\"meta\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"data est un tableau\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.be.an(\"array\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"libelle\": \"Algorithmique\",\r\n    \"professeur\": \"M. Sène\",\r\n    \"volume_horaire\": 40\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cours",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cours"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Afficher un cours",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Cours retourné avec les bonnes données\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.have.property(\"id\");\r",
+                  "    pm.expect(json.data).to.have.property(\"libelle\");\r",
+                  "    pm.expect(json.data).to.have.property(\"professeur\");\r",
+                  "    pm.expect(json.data).to.have.property(\"volume_horaire\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"libelle\": \"Algorithmique\",\r\n    \"professeur\": \"M. Sène\",\r\n    \"volume_horaire\": 40\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cours/{{cours_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cours",
+                "{{cours_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modifier un cours",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Cours modifié avec le nouveau libellé\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.have.property(\"id\");\r",
+                  "    pm.expect(json.data.libelle).to.eql(\"Algorithmique Avancée\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"libelle\": \"Algorithmique Avancée\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/cours/{{cours_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cours",
+                "{{cours_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer un cours",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 204 No Content\", function () {\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "});\r",
+                  "\r",
+                  "// On vide le cours_id car le cours n'existe plus\r",
+                  "pm.environment.unset(\"cours_id\");\r",
+                  "console.log(\"cours_id supprimé de l'environnement\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"libelle\": \"Algorithmique Avancée\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cours/{{cours_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cours",
+                "{{cours_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Etudiants",
+      "item": [
+        {
+          "name": "Créer un étudiant",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201 Created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Etudiant créé avec les bonnes données\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.have.property(\"id\");\r",
+                  "    pm.expect(json.data.prenom).to.eql(\"Mariama\");\r",
+                  "    pm.expect(json.data.email).to.eql(\"mariama@ecole.sn\");\r",
+                  "});\r",
+                  "\r",
+                  "// Sauvegarde automatique de l'id de l'étudiant\r",
+                  "const json = pm.response.json();\r",
+                  "pm.environment.set(\"etudiant_id\", json.data.id);\r",
+                  "console.log(\"etudiant_id sauvegardé :\", json.data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"prenom\": \"Mariama\",\r\n    \"nom\": \"Sané\",\r\n    \"email\": \"mariama@ecole.sn\",\r\n    \"date_naissance\": \"2000-03-15\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/etudiants",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "etudiants"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lister les étudiants",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Réponse paginée avec data, links et meta\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"data\");\r",
+                  "    pm.expect(json).to.have.property(\"links\");\r",
+                  "    pm.expect(json).to.have.property(\"meta\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"data est un tableau\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.be.an(\"array\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"prenom\": \"Mariama\",\r\n    \"nom\": \"Sané\",\r\n    \"email\": \"mariama@ecole.sn\",\r\n    \"date_naissance\": \"2000-03-15\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/etudiants",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "etudiants"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Afficher un étudiant",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Etudiant retourné avec les bonnes données\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.have.property(\"id\");\r",
+                  "    pm.expect(json.data).to.have.property(\"prenom\");\r",
+                  "    pm.expect(json.data).to.have.property(\"nom\");\r",
+                  "    pm.expect(json.data).to.have.property(\"email\");\r",
+                  "    pm.expect(json.data).to.have.property(\"date_naissance\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"libelle\": \"Algorithmique Avancée\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/etudiants/{{etudiant_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "etudiants",
+                "{{etudiant_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modifier un étudiant",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Etudiant modifié avec le nouveau prénom\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.have.property(\"id\");\r",
+                  "    pm.expect(json.data.prenom).to.eql(\"Mamadou\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"prenom\": \"Mamadou\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/etudiants/{{etudiant_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "etudiants",
+                "{{etudiant_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer un étudiant",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 204 No Content\", function () {\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "});\r",
+                  "\r",
+                  "// On vide le etudiant_id car l'étudiant n'existe plus\r",
+                  "pm.environment.unset(\"etudiant_id\");\r",
+                  "console.log(\"etudiant_id supprimé de l'environnement\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"prenom\": \"Mamadou\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/etudiants/{{etudiant_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "etudiants",
+                "{{etudiant_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Many-to-Many",
+      "item": [
+        {
+          "name": "Attach",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Message de succès présent\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"message\");\r",
+                  "    pm.expect(json).to.have.property(\"data\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cours_ids\": [{{cours_id}}]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/etudiants/{{etudiant_id}}/cours/attach",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "etudiants",
+                "{{etudiant_id}}",
+                "cours",
+                "attach"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Etudiant avec cours",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Les cours sont inclus dans la réponse\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.have.property(\"cours\");\r",
+                  "    pm.expect(json.data.cours).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"L'étudiant est inscrit à au moins un cours\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data.cours.length).to.be.above(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/etudiants/{{etudiant_id}}?include=cours",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "etudiants",
+                "{{etudiant_id}}"
+              ],
+              "query": [
+                {
+                  "key": "include",
+                  "value": "cours"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sync",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Message et data présents\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"message\");\r",
+                  "    pm.expect(json).to.have.property(\"data\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La liste des cours a été synchronisée\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data).to.have.property(\"cours\");\r",
+                  "    pm.expect(json.data.cours).to.be.an(\"array\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cours_ids\": [{{cours_id}}]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/etudiants/{{etudiant_id}}/cours/sync?include=cours",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "etudiants",
+                "{{etudiant_id}}",
+                "cours",
+                "sync"
+              ],
+              "query": [
+                {
+                  "key": "include",
+                  "value": "cours"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detach",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Message de succès présent\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json).to.have.property(\"message\");\r",
+                  "    pm.expect(json).to.have.property(\"data\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"La liste des cours est vide après detach\", function () {\r",
+                  "    const json = pm.response.json();\r",
+                  "    pm.expect(json.data.cours).to.be.an(\"array\");\r",
+                  "    pm.expect(json.data.cours.length).to.eql(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cours_ids\": [{{cours_id}}]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/etudiants/{{etudiant_id}}/cours/detach?include=cours",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "etudiants",
+                "{{etudiant_id}}",
+                "cours",
+                "detach"
+              ],
+              "query": [
+                {
+                  "key": "include",
+                  "value": "cours"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
