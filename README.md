@@ -831,4 +831,4 @@ Tests: 22 passed
 
 ---
 
-*Projet réalisé dans le cadre du cours de développement back-end — IPD Licence STI, 2026.*
+*Projet réalisé dans le cadre du cours de développement back-end - IPD Licence STI, 2026.*
