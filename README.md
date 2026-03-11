@@ -1,7 +1,7 @@
 # 📚 API REST Laravel — Gestion Étudiants & Cours
 
 > Projet pédagogique — IPD Licence STI  
-> Date : 25 février 2026
+
 
 ---
 
@@ -831,4 +831,4 @@ Tests: 22 passed
 
 ---
 
-*Projet réalisé dans le cadre du cours de développement back-end - IPD Licence STI, 2026.*
+
